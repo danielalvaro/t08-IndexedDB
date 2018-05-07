@@ -1,0 +1,89 @@
+<html>
+<head>
+    <link rel=stylesheet href="mycss.css">
+    <script>
+        var cronometro;
+            seg = 0;
+            min = 0;
+        function iniciar() {
+
+            
+            var s = document.getElementById("segundos");
+            var m = document.getElementById("minutos");
+
+
+            cronometro = window.setInterval(function() {
+                if (seg == 60) {
+                    seg = 0;
+                    min++;
+                }
+                s.innerHTML = seg;
+                m.innerHTML = min;
+                localStorage.setItem("seg",seg);
+                localStorage.setItem("min",min);
+                
+                seg++;
+            }, 1000);
+
+            var boton = document.getElementById("iniciar");
+            boton.disabled = true;
+            var boton1 = document.getElementById("parar");
+            boton1.disabled = false;
+            var boton2 = document.getElementById("reiniciar");
+            boton2.disabled = false;
+        }
+
+        function parar() {
+            clearInterval(cronometro);
+
+            var boton = document.getElementById("iniciar");
+            boton.disabled = false;
+            var boton1 = document.getElementById("parar");
+            boton1.disabled = true;
+            var boton2 = document.getElementById("reiniciar");
+            boton2.disabled = false;
+        }
+
+        function reiniciar() {
+            clearInterval(cronometro);
+
+            var s = document.getElementById("segundos");
+            var m = document.getElementById("minutos");
+            s.innerHTML = 0;
+            m.innerHTML = 0;
+            
+            seg=0;
+            min=0;
+            var boton = document.getElementById("iniciar");
+            boton.disabled = false;
+            var boton1 = document.getElementById("parar");
+            boton1.disabled = true;
+            var boton2 = document.getElementById("reiniciar");
+            boton2.disabled = true;
+        }
+        
+        window.onload=function()
+    {
+        if(localStorage.getItem("seg")!=null && localStorage.getItem("min")!=null)
+        {
+            seg=localStorage.getItem("seg");
+            min=localStorage.getItem("min");
+            iniciar();
+        }
+    }
+    </script>
+</head>
+
+<body>
+    <main>
+    <div>
+        <span id="minutos">- </span><span>:</span><span id="segundos"> -</span>
+    </div>
+    <div>   
+        <input type="button" onclick="iniciar()" value="Iniciar" id="iniciar">
+        <input type="button" onclick="parar()" value="Parar" id="parar" disabled>
+        <input type="button" onclick="reiniciar()" value="Reiniciar" id="reiniciar" disabled>
+    </div>
+    </main>
+</body>
+</html>
