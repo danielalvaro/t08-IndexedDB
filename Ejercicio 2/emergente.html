@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>BOM</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/micss.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Excepciones -->
+    <script src="js/BaseException.js"></script>
+    <!-- Gestión ERP -->
+    <script src="js/Erp.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/DOM.js"></script>
+</head>
+
+<body>
+    <main>
+        <div id="prod">
+        </div>
+    </main>
+</body>
+<script>
+    function getGET() {
+        var loc = document.location.href;
+        if (loc.indexOf('?') > 0) {
+            var getString = loc.split('?')[1];
+            var GET = getString.split('&');
+            var get = {};
+            for (var i = 0, l = GET.length; i < l; i++) {
+                var tmp = GET[i].split('=');
+                get[tmp[0]] = unescape(decodeURI(tmp[1]));
+            }
+            return get;
+        }
+    }
+
+    window.onload = function() {
+        var valores = getGET();
+            var array=[];
+            for(var index in valores)
+            {
+                array.push(valores[index]);
+            }
+            
+            document.getElementById("prod").innerHTML="";
+            document.getElementById("prod").innerHTML+="<div><a><h3>"+array[0]+"</h3><img src='"+array[2]+"'><span>"+array[0]+"</span><h4>"+array[1]+" €</h4></a></div><div id='desc'><h2>Descripción del producto: </h2><p>"+array[3]+"</p><h3>(Stock: "+array[4]+")</h3></div>";
+    }
+
+</script>
+
+
+</html>
