@@ -13,10 +13,10 @@ function validado() {
 }
 
 
-    
-function setCookie(cname,cvalue,exdays) {
+
+function setCookie(cname, cvalue, exdays) {
     var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toGMTString();
     document.cookie = cname + "=" + cvalue + ";";
 }
@@ -25,7 +25,7 @@ function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) == ' ') {
             c = c.substring(1);
@@ -38,13 +38,13 @@ function getCookie(cname) {
 }
 
 function checkCookie(user) {
-    user=getCookie("username");
+    user = getCookie("username");
     if (user != "") {
         alert("Bienvenido, " + user);
     } else {
-       if (user != "" && user != null) {
-           setCookie("username", user, 30);
-       }
+        if (user != "" && user != null) {
+            setCookie("username", user, 30);
+        }
     }
 }
 
@@ -63,8 +63,9 @@ function acceso() {
     var pass = document.createElement("input");
     pass.setAttribute("type", "password");
     pass.setAttribute("placeholder", "Contraseña");
-    pass.setAttribute("id", "campopass")
+    pass.setAttribute("id", "campopass");
     var boton = document.createElement("button");
+    boton.setAttribute("id","bottonacceso");
     boton.textContent = "Acceder";
 
     f.appendChild(user);
@@ -230,6 +231,24 @@ function addcat2() {
     var x = document.getElementById("inputcat").value;
     var x1 = new Category(x);
     almacen.addCategory(x1);
+
+    var active = dataBase.result;
+    var data = active.transaction(["categorias"], "readwrite")
+    var object = data.objectStore("categorias");
+
+    var request = object.put({
+        title: x
+    });
+
+    request.onerror = function (e) {
+        alert("Error de inserción de categoría.");
+    }
+
+    data.oncomplete = function (e) {
+        alert("Se agregó correctamente el nuevo objeto a la base de datos.");
+    }
+
+
     menuCategoryShopPopulate();
     validado();
     addcat();
@@ -273,6 +292,32 @@ function removecat2() {
     var combo = document.getElementById("selectcat");
     var selected = combo.options[combo.selectedIndex].text;
     almacen.removeCategory(selected);
+
+
+    var objectStore = db.transaction("categorias").objectStore("categorias");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var num = cursor.key;
+            if (selected == cursor.value.title) {
+                var request = db.transaction(["categorias"], "readwrite").objectStore("categorias").delete(num);
+                request.onsuccess = function (event) {
+                    alert("Se borró correctamente la categoría de la base de datos.");
+                }
+
+            }
+            cursor.continue();
+        }
+    };
+
+
+
+
+
+
+
+
+
     menuCategoryShopPopulate();
     removecat();
     validado();
@@ -323,11 +368,44 @@ function modifycat() {
 function modifycat2() {
     var combo = document.getElementById("selectcat");
     var selected = combo.options[combo.selectedIndex].text;
+    var new1 = document.getElementById("inputcatnombre").value;
     for (var i = 0; i < categorias.length; i++) {
         if (categorias[i].title == selected) {
-            categorias[i].title = document.getElementById("inputcatnombre").value;
+            categorias[i].title = new1;
         }
     }
+
+
+
+
+    var objectStore = db.transaction("categorias").objectStore("categorias");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var num = cursor.key;
+            if (selected == cursor.value.title) {
+                var request = db.transaction(["categorias"], "readwrite").objectStore("categorias").delete(num);
+                var active = dataBase.result;
+                var data = active.transaction(["categorias"], "readwrite")
+                var object = data.objectStore("categorias");
+
+                var request = object.put({
+                    title: new1,
+                    id: cursor.key
+                });
+                request.onsuccess=function(){
+                    alert("Modificación realizada correctamente.")
+                }
+            }
+            cursor.continue();
+        }
+    };
+
+
+
+
+
+
     menuCategoryShopPopulate();
     modifycat();
     validado();
@@ -367,6 +445,30 @@ function addshop2() {
     var x = document.getElementById("inputcat").value;
     var x1 = new Shop(x);
     almacen.addShop(x1);
+    
+    
+    
+    
+    var active = dataBase.result;
+    var data = active.transaction(["tiendas"], "readwrite")
+    var object = data.objectStore("tiendas");
+
+    var request = object.put({
+        name: x
+    });
+
+    request.onerror = function (e) {
+        alert("Error de inserción de tiendas.");
+    }
+
+    data.oncomplete = function (e) {
+        alert("Se agregó correctamente el nuevo objeto a la base de datos.");
+    }
+    
+    
+    
+    
+    
     shopsMenusPopulate();
     addshop();
     validado();
@@ -410,6 +512,35 @@ function removeshop2() {
     var combo = document.getElementById("selectcat");
     var selected = combo.options[combo.selectedIndex].text;
     almacen.removeShop(selected);
+    
+    
+    
+    
+    
+    
+    var objectStore = db.transaction("tiendas").objectStore("tiendas");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var num = cursor.key;
+            if (selected == cursor.value.name) {
+                var request = db.transaction(["tiendas"], "readwrite").objectStore("tiendas").delete(num);
+                request.onsuccess = function (event) {
+                    alert("Se borró correctamente la tienda de la base de datos.");
+                }
+
+            }
+            cursor.continue();
+        }
+    };
+
+    
+    
+    
+    
+    
+    
+    
     shopsMenusPopulate();
     removeshop();
     validado();
@@ -460,11 +591,40 @@ function modifyshop() {
 function modifyshop2() {
     var combo = document.getElementById("selectcat");
     var selected = combo.options[combo.selectedIndex].text;
+    var new1= document.getElementById("inputcatnombre").value;
     for (var i = 0; i < tiendas.length; i++) {
         if (tiendas[i].name == selected) {
-            tiendas[i].name = document.getElementById("inputcatnombre").value;
+            tiendas[i].name = new1;
         }
     }
+    
+    
+    
+    var objectStore = db.transaction("tiendas").objectStore("tiendas");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var num = cursor.key;
+            if (selected == cursor.value.name) {
+                var request = db.transaction(["tiendas"], "readwrite").objectStore("tiendas").delete(num);
+                var active = dataBase.result;
+                var data = active.transaction(["tiendas"], "readwrite")
+                var object = data.objectStore("tiendas");
+
+                var request = object.put({
+                    name: new1,
+                    id: cursor.key
+                });
+                request.onsuccess=function(){
+                    alert("Modificación realizada correctamente.")
+                }
+            }
+            cursor.continue();
+        }
+    };
+    
+    
+    
     shopsMenusPopulate();
     modifyshop();
     validado();
@@ -571,14 +731,44 @@ function addprod2() {
             var cate = categorias[i];
         }
     }
-    
+
     var x = new Product(serial, document.getElementById("inputnombre").value, document.getElementById("inputprecio").value);
 
     x.images[0] = document.getElementById("inputimagen").value;
-    x.cat=cate;
-    
+    x.cat = cate;
+
     almacen.addProduct(x, categorias[1]);
     almacen.addProductInShop(x, tienda, document.getElementById("inputstock").value);
+    
+    
+    
+    
+    
+    
+    var active = dataBase.result;
+    var data = active.transaction(["productos"], "readwrite")
+    var object = data.objectStore("productos");
+
+    var request = object.put({
+        name: document.getElementById("inputnombre").value,
+        images: document.getElementById("inputimagen").value,
+        cat: cate,
+        price: document.getElementById("inputprecio").value,
+        description: "Producto Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque gravida, felis vel elementum ul",
+        stock: document.getElementById("inputstock").value
+    });
+
+    request.onerror = function (e) {
+        alert("Error de inserción de tiendas.");
+    }
+
+    data.oncomplete = function (e) {
+        alert("Se agregó correctamente el nuevo objeto a la base de datos.");
+    }
+    
+    
+    
+    
     addprod();
     validado();
 }
@@ -638,14 +828,33 @@ function removeprod2() {
     for (var i = 0; i < tiendas.length; i++) {
         if (tiendas[i].name == selected) {
             var tienda = tiendas[i].name;
-            for (var j = 0; j < productos.length; j++){
+            for (var j = 0; j < productos.length; j++) {
                 if (productos[j].name == selected1) {
-                    var producto=productos[j].name;
-                    almacen.removeProduct(producto,tienda);
+                    var producto = productos[j].name;
+                    almacen.removeProduct(producto, tienda);
                 }
             }
         }
     }
+    
+    
+    var objectStore = db.transaction("productos").objectStore("productos");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var num = cursor.key;
+            if (selected1 == cursor.value.name) {
+                var request = db.transaction(["productos"], "readwrite").objectStore("productos").delete(num);
+                request.onsuccess = function (event) {
+                    alert("Se borró correctamente el producto de la base de datos.");
+                }
+
+            }
+            cursor.continue();
+        }
+    };
+    
+    
 
     removeprod();
     validado();
@@ -739,28 +948,71 @@ function modifyprod2() {
     var combo1 = document.getElementById("selecttienda");
     var selected1 = combo1.options[combo1.selectedIndex].text;
 
+
+    
+    var w1 = document.getElementById("inputnombre").value;
+    var w2 = document.getElementById("inputimagen").value;
+    var w3 = document.getElementById("inputprecio").value;
+    var w4 = document.getElementById("inputstock").value;
+    
+    
     
     for (var i = 0; i < tiendas.length; i++) {
         if (tiendas[i].name == selected1) {
             var tienda = tiendas[i];
-            for (var j = 0; j < tienda.products.length; j++){
+            for (var j = 0; j < tienda.products.length; j++) {
                 if (tienda.products[j].name == selected) {
-                    tienda.products[j].name=document.getElementById("inputnombre").value;
-                    tienda.products[j].images[0]=document.getElementById("inputimagen").value;
-                    tienda.products[j].price=document.getElementById("inputprecio").value;
-                    tienda.products[j].stock=document.getElementById("inputstock").value;
+                    tienda.products[j].name = document.getElementById("inputnombre").value;
+                    tienda.products[j].images[0] = document.getElementById("inputimagen").value;
+                    tienda.products[j].price = document.getElementById("inputprecio").value;
+                    tienda.products[j].stock = document.getElementById("inputstock").value;
                 }
             }
         }
     }
 
+
+    
+    
+    
+    
+    
+    var objectStore = db.transaction("productos").objectStore("productos");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var num = cursor.key;
+            if (selected == cursor.value.name) {
+                var request = db.transaction(["productos"], "readwrite").objectStore("productos").delete(num);
+                var active = dataBase.result;
+                var data = active.transaction(["productos"], "readwrite")
+                var object = data.objectStore("productos");
+
+                var request = object.put({
+                    name: w1,
+                    images: w2,
+                    price: w3,
+                    stock: w4,
+                    id: cursor.key
+                });
+                request.onsuccess=function(){
+                    alert("Modificación realizada correctamente.")
+                }
+            }
+            cursor.continue();
+        }
+    };
+    
+    
+    
+    
+    
+    
+    
     
     modifyprod();
     validado();
 }
-
-
-
 
 
 
@@ -810,10 +1062,71 @@ function modifystock2() {
     for (var i = 0; i < productos.length; i++) {
         if (productos[i].name == selected) {
             productos[i].stockglobal = document.getElementById("inputstock").value;
+            varcont=i;
         }
     }
+    
+        var w1 = productos[varcont].name;
+        var w2 = productos[varcont].images[0];
+        var w3 = productos[varcont].price;
+        var w4 = document.getElementById("inputstock").value;
+    
+    
+    
+    
+    
+    
+    
+    
+    var objectStore = db.transaction("productos").objectStore("productos");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var num = cursor.key;
+            if (selected == cursor.value.name) {
+                var request = db.transaction(["productos"], "readwrite").objectStore("productos").delete(num);
+                var active = dataBase.result;
+                var data = active.transaction(["productos"], "readwrite")
+                var object = data.objectStore("productos");
+
+                var request = object.put({
+                    name: w1,
+                    images: w2,
+                    price: w3,
+                    stock: w4,
+                    id: cursor.key
+                });
+                request.onsuccess=function(){
+                    alert("Modificación realizada correctamente.")
+                }
+            }
+            cursor.continue();
+        }
+    };
+    
+    
+    
+    
+    
     modifystock();
     validado();
 }
 
-window.onload=acceso();
+
+/*
+function clickCounter() {
+    if(typeof(Storage) !== "undefined") {
+        if (localStorage.clickcount) {
+            localStorage.clickcount = Number(localStorage.clickcount)+1;
+        } else {
+            localStorage.clickcount = 1;
+        }
+        document.getElementById("bottonacceso").innerHTML = localStorage.clickcount ;
+    } else {
+        document.getElementById("result").innerHTML = "Usuario incorrecto.";
+    }
+}
+*/
+
+
+window.onload = acceso();

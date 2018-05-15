@@ -1,11 +1,11 @@
 var ventana;
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 dataBase = indexedDB.open("dbcat", 1);
-dataBase.onsuccess = function (event) {
-    db = dataBase.result;
-    alert('Database loaded');
-    shopsMenusPopulate();
-    menuCategoryShopPopulate();
+
+
+
+dataBase.onerror=function(){
+    alert("Error al cargar la DB.");
 }
 
 
@@ -35,16 +35,31 @@ dataBase.onupgradeneeded = function (e) {
     object2.createIndex('by_name', 'name', {
         unique: false
     });
-
-    dataBase.onsuccess = function (e) {
-        alert('Database loaded');
-        addCategoryBase();
+    
+    dataBase.onsuccess=function(e){
+        init();
         addShopsBase();
+        addCategoryBase();
         addProdsBase();
-    };
+    }
+    
+}
 
+    dataBase.onsuccess=function(e){
+        init();
+    alert("DB loaded");
+        db=dataBase.result;
+        
+    initPopulate();
+    menuCategoryShopPopulate();
+    shopsMenusPopulate();
+    acceso();
 };
 
+
+
+    
+   
 
 
 
@@ -205,9 +220,10 @@ function init() {
     almacen.addProductInShop(p10, t4, 4);
     almacen.addProductInShop(p11, t4, 4);
     almacen.addProductInShop(p12, t4, 4);
+}
 
 
-
+addCategoryBase();
 
 
 
@@ -235,7 +251,7 @@ function init() {
 
 
 
-
+    addShopsBase();
 
 
 
@@ -260,7 +276,8 @@ function init() {
         };
     }
 
-
+    
+    addProdsBase();
 
 
     function addProdsBase() {
@@ -289,35 +306,13 @@ function init() {
     }
 
 
-    /*
-    function load(){
-        var active = dataBase.result;
-                var data = active.transaction(["categorias"], "readwrite");
-                var object = data.objectStore("categorias");
-                var index = object.index("by_title");
-        
-    }
-    */
-
-
-
-    initPopulate();
-    menuCategoryShopPopulate();
-    acceso();
-}
-
-
-
-
-
 
 
 
 
 function initPopulate() {
     var d = document.getElementById("prod");
-    while (d.hasChildNodes())
-        d.removeChild(d.firstChild);
+    while (d.hasChildNodes()) d.removeChild(d.firstChild);
     d.innerHTML = "<p>ERP organizativo del complejo de tiendas de la ciudad con productos de ropa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vehicula nisl et mattis volutpat. Proin at placerat odio. Maecenas euismod in nisl vel feugiat. Nunc ut neque sit amet diam congue fringilla. Nam viverra ante in magna tempus consectetur. Sed nec leo sed lectus vulputate tempus. Proin a finibus metus, non rhoncus felis. Integer sit amet ligula eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas at augue faucibus, ultricies felis a, pellentesque augue. Nulla facilisi. Mauris sodales nisl nec purus ornare sagittis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras sit amet mollis elit. Nunc feugiat neque vel consectetur feugiat. Vivamus pretium lectus non vehicula vehicula. Aenean vestibulum dui suscipit semper mollis. Aenean interdum facilisis diam, ac volutpat lacus elementum eget. Fusce non mauris convallis, consectetur lacus mollis, mollis est. Donec vitae aliquam odio. Donec turpis odio, molestie nec lacus at, sollicitudin pharetra libero. Integer venenatis enim id lorem pulvinar porta. Etiam sollicitudin condimentum venenatis. Aliquam ac enim at diam fringilla suscipit eu et nisl. Quisque aliquet tempor leo, ut posuere quam molestie in. Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin facilisis in urna eget consequat. In in fringilla urna, ac efficitur massa. Integer leo dolor, hendrerit id libero vitae, iaculis auctor ex. Sed at tristique ipsum. Praesent eget gravida purus. Sed consequat ullamcorper nibh. Maecenas ex arcu, ornare porta velit sed, posuere porta elit. Proin interdum fermentum ultrices. Ut ultrices tincidunt erat, nec commodo tellus egestas nec. Fusce id euismod nisi, ac vulputate turpis. Nulla facilisis orci eget neque finibus rhoncus. In in fringilla urna, ac efficitur massa. Integer leo dolor, hendrerit id libero vitae, iaculis auctor ex. Sed at tristique ipsum. Praesent eget gravida purus. Sed consequat ullamcorper nibh. Maecenas ex arcu, ornare porta velit sed, posuere porta elit. Proin interdum fermentum ultrices. Ut ultrices tincidunt erat, nec commodo tellus egestas nec. Fusce id euismod nisi, ac vulputate turpis. Nulla facilisis orci eget neque finibus rhoncus.Proin interdum fermentum ultrices. Ut ultrices tincidunt erat, nec commodo tellus egestas nec. Fusce id euismod nisi, ac vulputate turpis. Nulla facilisis orci eget neque finibus rhoncus.Proin interdum fermentum ultrices. Ut ultrices tincidunt erat, nec commodo tellus egestas nec. Fusce id euismod nisi, ac vulputate turpis. Nulla facilisis orci eget neque finibus rhoncus.</p>";
 }
 
@@ -330,6 +325,8 @@ function initPopulate() {
 
 
 function shopsMenusPopulate() {
+    
+    /*
     var transaction = db.transaction(["tiendas"], "readwrite");
     transaction.oncomplete = function (event) {
     };
@@ -352,23 +349,13 @@ function shopsMenusPopulate() {
             cursor.continue();
         }
     };
-
-
-
-
-
-
-
-
-
-    /*
+    */
     var d = document.getElementById("nav");
     while (d.hasChildNodes())
         d.removeChild(d.firstChild);
     for (var i = 0; i < tiendas.length; i++) {
-        document.getElementById("nav").innerHTML += '<a href="#" onclick="shopPopulate(tiendas[' + i + '])">' + tiendas[i].name + '</a>';
+            document.getElementById("nav").innerHTML += '<a href="#" onclick="shopPopulate(tiendas[' + i + '])">' + tiendas[i].name + '</a>';
     }
-    */
 }
 
 
@@ -380,12 +367,10 @@ function shopsMenusPopulate() {
 
 
 function shopPopulate(tienda) {
+
     glob = tienda;
     var d = document.getElementById("prod");
-    while (d.hasChildNodes())
-        d.removeChild(d.firstChild);
-
-
+    while (d.hasChildNodes()) d.removeChild(d.firstChild);
 
     var i = 0;
     var div = "div";
@@ -393,6 +378,7 @@ function shopPopulate(tienda) {
         document.getElementById("prod").innerHTML += "<div><a href='#' onmouseover='productShopPopulate(" + i + ")' onmouseout='productShopPopulate2(" + i + ")' onclick='globalProductPopulate(glob," + i + ")' id='div" + i + "'><h3>" + tienda.products[i].name + "</h3><img src='" + tienda.products[i].images[0] + "'><span id='span" + i + "'>" + tienda.products[i].description + "</span><h4>" + tienda.products[i].price + " €</h4></a><button onclick='abrirVentana(glob," + i + ")'><span>></span></button></div>";
         i++;
     } while (i < productos.length - 1);
+
 }
 
 
@@ -401,8 +387,15 @@ function shopPopulate(tienda) {
 
 
 function menuCategoryShopPopulate() {
-    
+    /*
+    var transaction = db.transaction(["categorias"], "readwrite");
+    transaction.oncomplete = function (event) {
+    };
 
+    transaction.onerror = function (event) {
+        alert('Transaction failed.');
+    };
+    
     var objectStore = db.transaction("categorias").objectStore("categorias");
     
     var d = document.getElementById("cat");
@@ -417,22 +410,13 @@ function menuCategoryShopPopulate() {
             cursor.continue();
         }
     };
-    
-    
-
-    
-    
-    
-    
-    
-    /*
+    */
     var d = document.getElementById("cat");
     while (d.hasChildNodes())
         d.removeChild(d.firstChild);
     for (var i = 0; i < categorias.length; i++) {
         document.getElementById("cat").innerHTML += '<a href="#" onclick="productsCategoryShopPopulate(glob,categorias[' + i + '])">' + categorias[i].title + "</a>";
     }
-    */
 }
 
 
@@ -512,4 +496,3 @@ function abrirVentana(tienda, i) {
 
 
 
-window.onload = init;
