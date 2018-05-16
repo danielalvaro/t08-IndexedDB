@@ -5,7 +5,7 @@ dataBase = indexedDB.open("dbcat", 1);
 
 
 dataBase.onerror=function(){
-    alert("Error al cargar la DB.");
+    alert("Error al cargar la base de datos");
 }
 
 
@@ -47,7 +47,7 @@ dataBase.onupgradeneeded = function (e) {
 
     dataBase.onsuccess=function(e){
         init();
-    alert("DB loaded");
+    alert("Base de datos cargada correctamente");
         db=dataBase.result;
         
     initPopulate();
@@ -244,7 +244,7 @@ addCategoryBase();
         };
 
         data.oncomplete = function (e) {
-            alert('Objects successfully added');
+            alert('Categorías añadidas a la BD');
         };
     }
 
@@ -272,7 +272,7 @@ addCategoryBase();
         };
 
         data.oncomplete = function (e) {
-            alert('Objects successfully added');
+            alert('Tiendas añadidas a la BD');
         };
     }
 
@@ -301,7 +301,7 @@ addCategoryBase();
         };
 
         data.oncomplete = function (e) {
-            alert('Objects successfully added');
+            alert('Productos añadidos a la BD');
         };
     }
 

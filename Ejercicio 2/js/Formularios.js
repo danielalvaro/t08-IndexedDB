@@ -109,7 +109,7 @@ function validar() {
         modulos();
         validado();
     } else {
-        alert("Usuario incorrecto.");
+        alert("Usuario o contraseña incorrectos");
     }
 }
 
@@ -241,11 +241,11 @@ function addcat2() {
     });
 
     request.onerror = function (e) {
-        alert("Error de inserción de categoría.");
+        alert("Error de inserción de categoría");
     }
 
     data.oncomplete = function (e) {
-        alert("Se agregó correctamente el nuevo objeto a la base de datos.");
+        alert("Se agregó correctamente la nueva categoría a la base de datos");
     }
 
 
@@ -302,7 +302,7 @@ function removecat2() {
             if (selected == cursor.value.title) {
                 var request = db.transaction(["categorias"], "readwrite").objectStore("categorias").delete(num);
                 request.onsuccess = function (event) {
-                    alert("Se borró correctamente la categoría de la base de datos.");
+                    alert("Se borró correctamente la categoría de la base de datos");
                 }
 
             }
@@ -394,7 +394,7 @@ function modifycat2() {
                     id: cursor.key
                 });
                 request.onsuccess=function(){
-                    alert("Modificación realizada correctamente.")
+                    alert("Modificación realizada correctamente")
                 }
             }
             cursor.continue();
@@ -458,11 +458,11 @@ function addshop2() {
     });
 
     request.onerror = function (e) {
-        alert("Error de inserción de tiendas.");
+        alert("Error en la inserción de tienda");
     }
 
     data.oncomplete = function (e) {
-        alert("Se agregó correctamente el nuevo objeto a la base de datos.");
+        alert("Se agregó correctamente la nueva tienda a la base de datos");
     }
     
     
@@ -526,7 +526,7 @@ function removeshop2() {
             if (selected == cursor.value.name) {
                 var request = db.transaction(["tiendas"], "readwrite").objectStore("tiendas").delete(num);
                 request.onsuccess = function (event) {
-                    alert("Se borró correctamente la tienda de la base de datos.");
+                    alert("Se borró correctamente la tienda de la base de datos");
                 }
 
             }
@@ -616,7 +616,7 @@ function modifyshop2() {
                     id: cursor.key
                 });
                 request.onsuccess=function(){
-                    alert("Modificación realizada correctamente.")
+                    alert("Modificación realizada correctamente")
                 }
             }
             cursor.continue();
@@ -759,11 +759,11 @@ function addprod2() {
     });
 
     request.onerror = function (e) {
-        alert("Error de inserción de tiendas.");
+        alert("Error de inserción del producto");
     }
 
     data.oncomplete = function (e) {
-        alert("Se agregó correctamente el nuevo objeto a la base de datos.");
+        alert("Se agregó correctamente el nuevo producto a la base de datos");
     }
     
     
@@ -846,7 +846,7 @@ function removeprod2() {
             if (selected1 == cursor.value.name) {
                 var request = db.transaction(["productos"], "readwrite").objectStore("productos").delete(num);
                 request.onsuccess = function (event) {
-                    alert("Se borró correctamente el producto de la base de datos.");
+                    alert("Se borró correctamente el producto de la base de datos");
                 }
 
             }
@@ -1097,7 +1097,7 @@ function modifystock2() {
                     id: cursor.key
                 });
                 request.onsuccess=function(){
-                    alert("Modificación realizada correctamente.")
+                    alert("Modificación realizada correctamente")
                 }
             }
             cursor.continue();
